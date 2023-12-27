@@ -40,7 +40,6 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
     };
   }, []);
 
-
   const distanceKm = isMiles ? distance * 1.6 : distance;
 
   // Find the distance in km between two sets of coordinates using Haversine formula
@@ -91,7 +90,9 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
     }
 
     return competitions.filter((competition: any) => {
-      return competition.events.some((event: eventID) => events.includes(event));
+      return competition.events.some((event: eventID) =>
+        events.includes(event),
+      );
     });
   };
 
@@ -109,36 +110,36 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
 
   return (
     <div ref={containerRef}>
-    <Box
-      display="grid"
-      gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))"
-      alignItems="center"
-    >
-      {displayedEvents.map((competition) => (
-        <Box margin={0.5} padding={0.5}>
-          <Card>
-            <Typography variant="h5" fontWeight="bold">
-              {competition.name}
-            </Typography>
-            <Typography gutterBottom maxWidth="400px">
-              {new Date(
-                competition.date.from + "T12:00:00.000Z",
-              ).toLocaleString("en-US", { month: "long", day: "numeric" })}
-              {" | "}
-              {competition.city}
-            </Typography>
-            <Button
-              component="a"
-              href={`https://worldcubeassociation.org/competitions/${competition.id}`}
-              variant="soft"
-              color="neutral"
-            >
-              View Competition
-            </Button>
-          </Card>
-        </Box>
-      ))}
-    </Box>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+        alignItems="center"
+      >
+        {displayedEvents.map((competition) => (
+          <Box margin={0.5} padding={0.5}>
+            <Card>
+              <Typography variant="h5" fontWeight="bold">
+                {competition.name}
+              </Typography>
+              <Typography gutterBottom maxWidth="400px">
+                {new Date(
+                  competition.date.from + "T12:00:00.000Z",
+                ).toLocaleString("en-US", { month: "long", day: "numeric" })}
+                {" | "}
+                {competition.city}
+              </Typography>
+              <Button
+                component="a"
+                href={`https://worldcubeassociation.org/competitions/${competition.id}`}
+                variant="soft"
+                color="neutral"
+              >
+                View Competition
+              </Button>
+            </Card>
+          </Box>
+        ))}
+      </Box>
     </div>
   );
 };

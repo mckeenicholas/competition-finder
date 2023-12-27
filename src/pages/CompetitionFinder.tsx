@@ -17,12 +17,7 @@ import {
   ToggleButtonGroup,
   Option,
 } from "@mui/joy";
-import {
-  Container,
-  Theme,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Container, Theme, Typography, useMediaQuery } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState, useMemo } from "react";
 import { LocationOn } from "@mui/icons-material";
@@ -55,16 +50,19 @@ export const CompetitionFinder = () => {
   ];
 
   const apiCall = async (url: string) => {
-    console.log(url);
     setIsLoading(true);
     const result = await fetch(url);
     setIsLoading(false);
     return result.json();
-  }
+  };
 
   const getCompetitions = async () => {
     setIsLoading(true);
-    const response = (await apiCall("https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/competitions.json")).items.reverse();
+    const response = (
+      await apiCall(
+        "https://raw.githubusercontent.com/robiningelbrecht/wca-rest-api/master/api/competitions.json",
+      )
+    ).items.reverse();
     // The WCA's list can sometimes be cached, so remove past compeitions
     const comps = response.filter((competition: any) => {
       const endDate = new Date(competition.date.till + "T23:59:59.999Z");
@@ -92,7 +90,10 @@ export const CompetitionFinder = () => {
             lon: position.coords.longitude,
           });
           setTextBoxContents(
-            await getLocationName(position.coords.latitude, position.coords.longitude),
+            await getLocationName(
+              position.coords.latitude,
+              position.coords.longitude,
+            ),
           );
         },
         (error) => {
@@ -105,23 +106,27 @@ export const CompetitionFinder = () => {
   };
 
   const handleSearch = async () => {
-    const data = await apiCall(`https://nominatim.openstreetmap.org/search?addressdetails=1&format=jsonv2&q=${textBoxContents}`)
+    const data = await apiCall(
+      `https://nominatim.openstreetmap.org/search?addressdetails=1&format=jsonv2&q=${textBoxContents}`,
+    );
 
     //TODO: handle cities with duplicate names
-    const city = data[0]; 
-    
-    console.log(city);
+    const city = data[0];
 
-    setTextBoxContents((city.address.city ? `${city.address.city}, ${city.address.state}` : city.display_name));
-    setLocation({lat: city.lat, lon: city.lon})
-  }
-
-  const getLocationName = async (lat: number, lon: number) => {
-    const data = await apiCall(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&addressdetails=1&format=jsonv2`);
-    return data.address.city;
+    setTextBoxContents(
+      city.address.city
+        ? `${city.address.city}, ${city.address.state}`
+        : city.display_name,
+    );
+    setLocation({ lat: city.lat, lon: city.lon });
   };
 
-  const getLocationCoords = (locationName: string) => {};
+  const getLocationName = async (lat: number, lon: number) => {
+    const data = await apiCall(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&addressdetails=1&format=jsonv2`,
+    );
+    return data.address.city;
+  };
 
   const handleChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number") {
@@ -162,8 +167,6 @@ export const CompetitionFinder = () => {
     );
   };
 
-  console.log(competitions.length);
-
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="xl" style={{ textAlign: "center" }}>
@@ -200,7 +203,10 @@ export const CompetitionFinder = () => {
                 }
                 endDecorator={
                   <Box display="flex" alignItems="center">
-                    <Button startDecorator={<SearchIcon />} onClick={handleSearch}>
+                    <Button
+                      startDecorator={<SearchIcon />}
+                      onClick={handleSearch}
+                    >
                       {isSmall ? "" : "Search"}
                     </Button>
                   </Box>
@@ -362,18 +368,19 @@ export const CompetitionFinder = () => {
             </Grid>
           </Grid>
         </Box>
-        {isLoading && (
+        {isLoading ? (
           <Box margin="4rem">
             <CircularProgress />
           </Box>
+        ) : (
+          <CompetitionList
+            competitions={competitions}
+            location={location}
+            distance={displayDistance}
+            isMiles={isMiles}
+            events={selectedEvents}
+          />
         )}
-        <CompetitionList
-          competitions={competitions}
-          location={location}
-          distance={displayDistance}
-          isMiles={isMiles}
-          events={selectedEvents}
-        />
       </Container>
     </ThemeProvider>
   );
