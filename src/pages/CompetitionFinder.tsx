@@ -22,17 +22,17 @@ import SearchIcon from "@mui/icons-material/Search";
 import React, { useEffect, useState, useMemo } from "react";
 import { LocationOn } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
-import { coordinate, eventID } from "../utils/types";
+import { Nullable, coordinate, eventID } from "../utils/types";
 import { EventIcon } from "../components/EventIcon";
 import { events, eventIDtoName } from "../utils/events";
 import CompetitionList from "../components/CompetitionList";
 
 export const CompetitionFinder = () => {
-  const [location, setLocation] = useState<coordinate | null>(null);
+  const [location, setLocation] = useState<Nullable<coordinate>>(null);
   const [textBoxContents, setTextBoxContents] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [sliderValue, setSliderValue] = useState<number>(0);
-  const [displayDistance, setDisplayDistance] = useState<number>(0);
+  const [sliderValue, setSliderValue] = useState<number>(1);
+  const [displayDistance, setDisplayDistance] = useState<number>(5);
   const [isMiles, setIsMiles] = useState<boolean>(false);
   const [selectedEvents, setSelectedEvents] = useState<eventID[]>([]);
   const [competitions, setCompetitions] = useState<any>([]);
@@ -50,7 +50,7 @@ export const CompetitionFinder = () => {
   ];
 
   const apiCall = async (url: string) => {
-    setIsLoading(true);
+    setIsLoading(true); 
     const result = await fetch(url);
     setIsLoading(false);
     return result.json();
@@ -105,6 +105,7 @@ export const CompetitionFinder = () => {
     }
   };
 
+  //TODO: Implement usememo on api calls
   const handleSearch = async () => {
     const data = await apiCall(
       `https://nominatim.openstreetmap.org/search?addressdetails=1&format=jsonv2&q=${textBoxContents}`,
@@ -121,11 +122,16 @@ export const CompetitionFinder = () => {
     setLocation({ lat: city.lat, lon: city.lon });
   };
 
+  //TODO: correctly set location state name here
   const getLocationName = async (lat: number, lon: number) => {
     const data = await apiCall(
       `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&addressdetails=1&format=jsonv2`,
     );
-    return data.address.city;
+    return (
+      data.address.city
+        ? `${data.address.city}, ${data.address.state}`
+        : data.display_name
+    );
   };
 
   const handleChange = (event: Event, newValue: number | number[]) => {
