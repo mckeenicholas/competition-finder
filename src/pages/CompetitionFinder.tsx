@@ -134,7 +134,7 @@ export const CompetitionFinder = () => {
     );
   };
 
-  const handleChange = (event: Event, newValue: number | number[]) => {
+  const handleChange = (_event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number") {
       setSliderValue(newValue);
       setDisplayDistance(calculateValue(newValue)!);

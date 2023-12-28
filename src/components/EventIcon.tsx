@@ -6,7 +6,7 @@ import { Icon, styled } from "@mui/material";
 import "../utils/icons.css";
 
 // StyledIcon component to handle styling
-const StyledIcon = styled(Icon)(({ theme }) => ({
+const StyledIcon = styled(Icon)(({}) => ({
   height: "36px", // Adjust the height as needed
   width: "24px", // Adjust the width as needed
 }));

@@ -1,6 +1,3 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
 import { CompetitionFinder } from "./pages/CompetitionFinder";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { blue } from "@mui/material/colors";
@@ -20,7 +17,7 @@ const theme = createTheme({
   },
   spacing: 4,
 });
-
+  
 function App() {
   return (
     <ThemeProvider theme={theme}>
