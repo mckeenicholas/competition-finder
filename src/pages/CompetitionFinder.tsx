@@ -19,7 +19,7 @@ import {
 } from "@mui/joy";
 import { Container, Theme, Typography, useMediaQuery } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { LocationOn } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
 import { Nullable, coordinate, eventID } from "../utils/types";
@@ -50,7 +50,7 @@ export const CompetitionFinder = () => {
   ];
 
   const apiCall = async (url: string) => {
-    setIsLoading(true); 
+    setIsLoading(true);
     const result = await fetch(url);
     setIsLoading(false);
     return result.json();
@@ -98,6 +98,7 @@ export const CompetitionFinder = () => {
         },
         (error) => {
           alert("Unable to get current location.");
+          console.log(error);
         },
       );
     } else {
@@ -127,14 +128,12 @@ export const CompetitionFinder = () => {
     const data = await apiCall(
       `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&addressdetails=1&format=jsonv2`,
     );
-    return (
-      data.address.city
-        ? `${data.address.city}, ${data.address.state}`
-        : data.display_name
-    );
+    return data.address.city
+      ? `${data.address.city}, ${data.address.state}`
+      : data.display_name;
   };
 
-  const handleChange = (event: Event, newValue: number | number[]) => {
+  const handleChange = (_event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number") {
       setSliderValue(newValue);
       setDisplayDistance(calculateValue(newValue)!);
