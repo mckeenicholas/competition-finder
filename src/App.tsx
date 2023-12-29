@@ -17,7 +17,7 @@ const theme = createTheme({
   },
   spacing: 4,
 });
-  
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
