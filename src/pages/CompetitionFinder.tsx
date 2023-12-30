@@ -22,7 +22,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import { LocationOn } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
-import { Nullable, coordinate, eventID } from "../utils/types";
+import { Nullable, competition, coordinate, eventID } from "../utils/types";
 import { EventIcon } from "../components/EventIcon";
 import { events, eventIDtoName } from "../utils/events";
 import CompetitionList from "../components/CompetitionList";
@@ -35,7 +35,7 @@ export const CompetitionFinder = () => {
   const [displayDistance, setDisplayDistance] = useState<number>(5);
   const [isMiles, setIsMiles] = useState<boolean>(false);
   const [selectedEvents, setSelectedEvents] = useState<eventID[]>([]);
-  const [competitions, setCompetitions] = useState<any>([]);
+  const [competitions, setCompetitions] = useState<Array<competition>>([]);
 
   const isSmall = useMediaQuery<Theme>((theme) => theme.breakpoints.down("sm"));
   const theme = useTheme();
@@ -64,7 +64,7 @@ export const CompetitionFinder = () => {
       )
     ).items.reverse();
     // The WCA's list can sometimes be cached, so remove past compeitions
-    const comps = response.filter((competition: any) => {
+    const comps = response.filter((competition: competition) => {
       const endDate = new Date(competition.date.till + "T23:59:59.999Z");
       return endDate > new Date();
     });
@@ -140,7 +140,7 @@ export const CompetitionFinder = () => {
     }
   };
 
-  const valueLabelFormat = (value: any) => {
+  const valueLabelFormat = (value: number) => {
     return String(value) + (isMiles ? " mi" : " km");
   };
 

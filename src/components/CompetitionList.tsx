@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Nullable, coordinate, eventID } from "../utils/types";
+import { Nullable, competition, coordinate, eventID } from "../utils/types";
 import React from "react";
 import { Box, Button, Card } from "@mui/joy";
 import { Typography } from "@mui/material";
+import { FlagIcon } from "./FlagIcon";
 
 interface CompetitionListProps {
-  competitions: Array<any>;
+  competitions: Array<competition>;
   location: Nullable<coordinate>;
   distance: number;
   isMiles: boolean;
@@ -62,7 +63,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
   };
 
   const filterDistance = (
-    competitions: Array<any>,
+    competitions: Array<competition>,
     location: Nullable<coordinate>,
     distance: number,
   ) => {
@@ -73,7 +74,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
       return competitions;
     }
 
-    return competitions.filter((competition: any) => {
+    return competitions.filter((competition: competition) => {
       return (
         findDistance(location, {
           lat: competition.venue.coordinates.latitude,
@@ -83,13 +84,16 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
     });
   };
 
-  const filterEvents = (competitions: Array<any>, events: Array<eventID>) => {
+  const filterEvents = (
+    competitions: Array<competition>,
+    events: Array<eventID>,
+  ) => {
     setNumDisplayed(48);
     if (events.length === 0) {
       return competitions;
     }
 
-    return competitions.filter((competition: any) => {
+    return competitions.filter((competition: competition) => {
       return competition.events.some((event: eventID) =>
         events.includes(event),
       );
@@ -116,7 +120,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
         alignItems="center"
       >
         {displayedEvents.map((competition) => (
-          <Box margin={0.5} padding={0.5}>
+          <Box key={competition.id} margin={0.5} padding={0.5}>
             <Card>
               <Typography variant="h5" fontWeight="bold">
                 {competition.name}
@@ -126,7 +130,7 @@ const CompetitionList: React.FC<CompetitionListProps> = ({
                   competition.date.from + "T12:00:00.000Z",
                 ).toLocaleString("en-US", { month: "long", day: "numeric" })}
                 {" | "}
-                {competition.city}
+                <FlagIcon code={competition.country} /> {competition.city}
               </Typography>
               <Button
                 component="a"
